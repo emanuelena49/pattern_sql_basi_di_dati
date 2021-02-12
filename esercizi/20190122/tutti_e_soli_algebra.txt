@@ -1,0 +1,67 @@
+/* (c) le coppie (produttore,cliente) tali che il fornitore fornisca a quel cliente tutti e soli i prodotti di quel produttore. */
+
+candidati = πcod_cliente, cod_produttore (
+	prodotto ⨝ fornisce -- natural join --
+)
+
+sdf = πcod_cliente, cod_produttore, cod_prodotto (
+	prodotto ⨝ fornisce -- natural join --
+)
+
+-- ----------------------------------------------------- --
+-- SOLI -- 
+
+candidati2(cod_cliente, cod_produttore_2) = candidati
+
+no_good_soli = πcod_cliente, cod_produttore (
+	σcod_produttore≠cod_produttore_2 (candidati ⨝ candidati2)
+)
+
+-- ----------------------------------------------------- --
+-- TUTTI -- 
+
+requisiti = πcod_cliente (cliente) ⨯ πcod_produttore, cod_prodotto (prodotto)
+
+
+no_good_tutti = πcod_cliente, cod_produttore (
+	-- tutti i prodotti che i clienti NON hanno comprato
+	requisiti - sdf
+)
+
+-- ----------------------------------------------------- --
+-- risposta --
+Rc = candidati - no_good_solo - no_good_tutti
+
+
+/* (c variante) le coppie (produttore,cliente) tali che il fornitore fornisca a quel cliente tutti e soli i prodotti del produttore XXX */
+
+candidati = πcod_cliente (cliente)
+
+sdf = πcod_cliente, cod_prodotto (
+	σproduttore=XXX (prodotto) ⨝ fornisce -- natural join --
+)
+
+requisiti = πcod_cliente (cliente) ⨯ πcod_prodotto (σproduttore=XXX (prodotto))
+
+-- ----------------------------------------------------- --
+-- SOLI -- 
+
+no_good_soli = πcod_cliente (
+	-- tutti i clienti che hanno comprato un prodotto che non è di XXX --
+	sdf - requisiti
+)
+
+-- sol alternativa --
+πcod_cliente (σproduttore≠XXX (prodotto) ⨝ fornisce)
+
+-- ----------------------------------------------------- --
+-- TUTTI -- 
+
+no_good_tutti = πcod_cliente (
+	-- tutti i prodotti (di XXX) che i clienti NON hanno comprato --
+	requisiti - sdf
+)
+
+-- ----------------------------------------------------- --
+-- risposta --
+Rc_variante = candidati - no_good_solo - no_good_tutti
