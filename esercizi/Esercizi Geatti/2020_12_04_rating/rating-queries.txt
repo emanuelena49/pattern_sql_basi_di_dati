@@ -1,0 +1,116 @@
+Interrogazioni sullo schema 'movie-ratings':
+--------------------------------------------
+
+\i rating-complete.sql
+
+1. ottieni i titoli dei film diretti da Steven Spielberg in ordine alfabetico.
+
+2. ottieni, in ordine crescente, gli anni distinti in cui sono stati prodotti
+   film che hanno ricevuto una valutazione >= 4.
+
+3. Ottieni i nomi dei critici, i titoli dei film, la corrispondente valutazione
+   e la data della valutazione, ordinati come segue:
+    . il nome del critico (in ordine alfabetico)
+    . il titolo del film (in ordine alfabetico)
+    . valutazione (dalla più alta alla più bassa)
+
+-- INTERROGAZIONI CON RAGGRUPPAMENTO
+
+1. Quanti film nella base di dati sono stati prodotti tra il 1977 e il 1985
+   inclusi?
+
+2. qual''''''''è la valutazione media dei film di James Cameron?
+
+3. Qual è la data della critica più recente a un film di Victor Fleming?
+   -- pensare a come farla senza funzioni aggregate...
+
+4. Ottieni il titolo e la valutazione massima per ogni film che è stato
+   valutato almeno una volta, in ordine descrescente rispetto al voto.
+
+5. ottenere il titolo e la differenza tra voto massimo e voto minimo per ogni
+   film che abbia ricevuto almeno due valutazioni. Ordina il risultato
+   alfabeticamente rispetto al titolo.
+
+6. Ottieni, in ordine alfabetico, i nomi dei registi dei film che hanno
+   ricevuto una valutazione media di tutti i loro film superiore a 3.
+
+7. Ottieni, per ciascun critico, il nome del critico e il numero di film da
+   costui recensiti, ordinando il risultato rispetto al nome.
+
+8. Ripeti l'interrogazione precedente, ma include nel risultato (in ordine
+   alfabetico), soltanto i critici che hanno recensito esattamente un film.
+
+------------------------------------------
+INTERROGAZIONI CON ANNIDAMENTO:
+
+9. Tra i film che sono stati recensiti almeno una volta, trova (in ordine
+   alfabetico) i titoli di quelli che hanno ricevuto soltato valutazioni
+   maggiori o uguali a 4.
+   VINCOLO: senza usare interrogazioni raggruppate.
+
+   Con GROUP BY:
+        SELECT title
+        FROM movie natural join rating
+        GROUP BY mid, title
+        HAVING min(stars) >= 4
+    
+    Senza GROUP BY:
+        SELECT title
+        FROM movie natural join rating 
+        WHERE not exists (
+          SELECT *
+          FROM rating
+          WHERE stars < 4 and
+                rating.mid = movie.mid
+        )
+        order by title
+
+      Con NOT IN:
+        SELECT title
+        FROM movie natural join rating 
+        WHERE mid not in (
+          SELECT mid
+          FROM rating
+          WHERE stars < 4
+        )
+        order by title;
+
+10. Quanti registi hanno diretto film più vecchi del film con mid = 107?
+    - senza nessun join
+    - senza group by
+    - va bene count()
+
+    SELECT count(distinct director)
+    FROM movie
+    WHERE year < (
+      SELECT year
+      FROM movie
+      WHERE mid = 107
+    );
+
+11. Qual è il reviewer che ha recensito tutti i film di Spielberg?
+
+  tutti i reviewer tali che:
+  l'insieme di film recensiti dal reviewer:
+  sia un sovrainsieme dei film diretti da Spielberg.
+    == EQUIVALENTI ==
+  tutti i reviewer tali che:
+  non esiste un film diretto da Spielberg:
+  che non è stato recensito da lui.
+    
+  SQL:
+
+    SELECT name
+    FROM reviewer 
+    WHERE not exists (
+      SELECT *
+      FROM movie
+      WHERE director = 'Steven Spielberg'
+            and
+            not exists (
+              SELECT *
+              FROM rating
+              WHERE rating.rid = reviewer.rid
+                    and
+                    rating.mid = movie.mid
+            ));

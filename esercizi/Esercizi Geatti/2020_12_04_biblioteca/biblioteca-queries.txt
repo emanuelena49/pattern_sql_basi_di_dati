@@ -1,0 +1,31 @@
+Interrogazioni sullo schema 'bilioteca':
+----------------------------------------
+
+- \i soluzione_biblioteca.sql
+- \i biblioteca_instanza.sql
+
+
+1. i nome dei soci di sesso femminile che hanno letto qualche libro;
+
+2. i titoli dei libri nella sala A;
+
+3. gli autori e il genere dei libri letti da soci maschi;
+
+4. i titoli dei libri gialli letti da Ellade Pedone;
+
+5. i titoli dei libri e la sala in cui sono collocati;
+
+6. i titoli dei libri e la sala in cui sono collocati, inclusi i libri di cui
+   non è possibile ricavare la collocazione;
+
+7. i numeri di carta d'identità delle coppie di soci che hanno letto uno stesso
+   libro.
+      . ha_letto1 join ha_letto2 on ha_letto1.isbn = ha_letto2.isbn
+        caratterizza tutte le tuple in cui i due soci hanno letto almeno
+        un libro "in comune".
+
+8. i numeri di carta di identita di chi ha letto libri di cui NON è specificato
+   il genere.
+
+9. i numeri di carta d'identità dei soci che hanno letto almeno un libro
+   situato nella sala A.

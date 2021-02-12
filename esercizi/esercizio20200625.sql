@@ -41,7 +41,7 @@ WHERE numero_f >= ALL (
     FROM conta_f
 );
 
-
+/* algebra ospedali con dipendenti di tutte e sole le città del veneto */
 candidati ← π nome (reparto)
 
 citta_veneto ← π Citta (σ Regione=Veneto (si_trova_in))
