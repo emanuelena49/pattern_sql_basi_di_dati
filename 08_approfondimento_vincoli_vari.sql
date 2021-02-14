@@ -117,7 +117,7 @@ COMMIT;
 START TRANSACTION;
 
 -- comando per differire il controllo dei vincoli --
-SET CONSTRAINTS ALL DEFERRED;
+SET transaction CONSTRAINTS ALL DEFERRED;
 
 INSERT into Dipartimento values ('id111', 'Informatica', 'Stanford', 'Angelo Montanari');
 INSERT into Ricercatore values ('Angelo Montanari', 55 ,'id111');
