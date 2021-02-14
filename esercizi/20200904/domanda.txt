@@ -1,0 +1,14 @@
+Quali sono i due principali meccanismi forniti dal sistema di basi di dati PostgreSQL per la formulazione
+di vincoli complessi, non codificabili attraverso chiavi primarie, chiavi esterne o dichiarazioni di univocit`a e
+not-null?
+
+i due strumenti a disposizion sono i constraint e i trigger. 
+
+I primi ci consentono di inserire espressioni booleane che in seguito verranno valutate
+durante le operazioni di modifica delle relazioni. 
+
+I secondi sono meccanismi che consentono di eseguire una tot funzione di controllo
+in risposta ad una specifica operazione (insert, update e/o delete) su una relazione. I trigger permettono anche di 
+specificare se l'azione va eseguita prima o dopo un operazione e ci danno libertà (tramite la funzione, che deve 
+essere scritta dal progettista).
+
